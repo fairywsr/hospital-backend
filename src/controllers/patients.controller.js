@@ -4,7 +4,6 @@ import Patient from "../models/patient.model.js";
 export const registerPatient = async (req, res) => {
   const { name, email, phone, password, disease, age, gender, bloodGroup } =
     req.body;
-  console.log(req.body);
 
   if (
     !name ||
@@ -43,14 +42,25 @@ export const registerPatient = async (req, res) => {
 // Patient Login
 export const patientLogin = async (req, res) => {
   const { email, password } = req.body;
-
+  console.log(req.body);
   if (!email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
   const user = await Patient.findOne({ email });
 
-  if (!email) {
+  console.log("line 51", user, "db user");
+
+  if (!user) {
     return res.status(404).json({ message: "Invalid credentials" });
   }
+
+  const correctPassword = await user.isPasswordCorrect(String(password));
+  console.log(correctPassword);
+
+  if (!correctPassword) {
+    res.status(200).json({ message: "Invalid credentials" });
+  }
+
+  return res.status(200).json({ message: "User login successfully" });
 };

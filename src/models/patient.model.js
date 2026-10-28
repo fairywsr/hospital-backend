@@ -38,13 +38,14 @@ const patietSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-patietSchema.pre("save", async function (next) {
-  if (this.isModified("password")) return next();
+patietSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 patietSchema.methods.isPasswordCorrect = async function (password) {
+  console.log("password from user", typeof password);
+  console.log("Password from db", typeof this.password);
   return await bcrypt.compare(password, this.password);
 };
 
