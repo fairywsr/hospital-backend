@@ -5,6 +5,7 @@ const patietSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      required: true,
     },
     email: {
       type: String,
@@ -28,7 +29,7 @@ const patietSchema = new mongoose.Schema(
     bloodGroup: {
       type: String,
       enum: BLOOD_GROUPS,
-      default: BLOOD_GROUPS[0],
+      default: "O+",
     },
     disease: {
       type: String,
