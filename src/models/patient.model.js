@@ -47,7 +47,7 @@ patietSchema.pre("save", async function () {
 patietSchema.methods.isPasswordCorrect = async function (password) {
   console.log("password from user", typeof password);
   console.log("Password from db", typeof this.password);
-  return await bcrypt.compare(password, this.password);
+  return await bcrypt.compare(String(password), this.password);
 };
 
 const Patient = mongoose.model("Patient", patietSchema);

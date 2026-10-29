@@ -48,7 +48,7 @@ export const registerPatient = async (req, res) => {
       user,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal server error",
       error,
@@ -77,7 +77,7 @@ export const patientLogin = async (req, res) => {
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    const correctPassword = await user.isPasswordCorrect(String(password));
+    const correctPassword = await user.isPasswordCorrect(password);
     console.log(correctPassword);
 
     if (!correctPassword) {
@@ -86,10 +86,34 @@ export const patientLogin = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "login successfully" });
+      .json({ success: true, message: "login successfully", user });
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ success: false, message: "Internal server error", error });
+  }
+};
+// Patient Profile
+export const patientProfile = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    // find user from db based on id
+    const user = await Patient.findOne({ id });
+    console.log(user);
+
+    if (!user) {
+      res.status(200).json({ success: false, message: "User not found" });
+    }
+
+    res.status(300).json({
+      success: true,
+      message: "User profile fetched successfully",
+      user,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: true, message: "internal server error", error });
   }
 };

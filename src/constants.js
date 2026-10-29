@@ -12,7 +12,7 @@ export const BLOOD_GROUPS = [
 ];
 
 // Genders
-export const GENDERS = ["Male", "Female"];
+export const GENDERS = ["Male", "Female", "Prefer not to say"];
 
 // specilizations of Doctors
 export const DOCTORSTYPES = [

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { doctorsProfileStatus, DOCTORSTYPES, GENDERS } from "../constants";
+import bcrypt from "bcrypt";
+import { doctorsProfileStatus, DOCTORSTYPES, GENDERS } from "../constants.js";
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -17,7 +18,7 @@ const doctorSchema = new mongoose.Schema(
     },
     phone: {
       type: Number,
-      min: 999999999999,
+      max: 999999999999,
       required: true,
     },
     specilization: {
@@ -41,17 +42,28 @@ const doctorSchema = new mongoose.Schema(
       type: Number,
     },
     gender: {
+      type: String,
       enum: GENDERS,
       default: "Male",
       required: true,
     },
     status: {
+      type: String,
       enum: doctorsProfileStatus,
       default: "Pending",
     },
   },
   { timestamps: true },
 );
+
+doctorSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+doctorSchema.methods.isPasswordCorrect = async function (password) {
+  return await bcrypt.compare(String(password), this.password);
+};
 
 const Doctor = mongoose.model("doctor", doctorSchema);
 export default Doctor;
