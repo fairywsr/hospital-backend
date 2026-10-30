@@ -1,5 +1,5 @@
 import Doctor from "../models/doctor.model.js";
-
+import isPasswordCorrect from "../models/doctor.model.js";
 // doctor register api
 export const registerDoctor = async (req, res) => {
   try {
@@ -41,9 +41,9 @@ export const registerDoctor = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "this email or lincese already exist",
-        error: error.message,
       });
     }
+
     console.log("line 49");
     const doctor = await Doctor.create({
       name,
@@ -69,4 +69,67 @@ export const registerDoctor = async (req, res) => {
       .status(500)
       .json({ success: false, message: "Internal server error", error });
   }
+};
+
+export const loginDoctor = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log(req.body);
+    if (!email || !password) {
+      return res.status(200).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+    console.log(84);
+    const user = await Doctor.findOne({ email });
+
+    if (!user) {
+      return res.status(200).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    console.log(93);
+    const passwordCorrect = await user.isPasswordCorrect(password);
+
+    if (!passwordCorrect) {
+      return res.status(200).json({
+        success: false,
+        message: "Invalid Credentials",
+      });
+    }
+    console.log(102);
+    return res.status(200).json({
+      success: true,
+      message: "user Login in successfully",
+      user: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: true,
+      message: "Internal server error",
+      error: error,
+    });
+  }
+};
+
+export const doctorProfile = async (req, res) => {
+  const { id } = req.params.id;
+  console.log(id);
+
+  const user = await Doctor.findOne({ id });
+
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: "Account not found",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Profile fetched successfully",
+    Doctor: user,
+  });
 };
