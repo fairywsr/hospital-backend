@@ -115,21 +115,104 @@ export const loginDoctor = async (req, res) => {
 };
 
 export const doctorProfile = async (req, res) => {
-  const { id } = req.params.id;
-  console.log(id);
+  try {
+    const { id } = req.params;
+    console.log(id);
 
-  const user = await Doctor.findOne({ id });
+    const user = await Doctor.findById(id);
+    console.log(user);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Profile not found",
+      });
+    }
 
-  if (!user) {
-    return res.status(400).json({
+    return res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully",
+      Doctor: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
       success: false,
-      message: "Account not found",
+      message: error.message,
     });
   }
+};
 
-  return res.status(200).json({
-    success: true,
-    message: "Profile fetched successfully",
-    Doctor: user,
-  });
+export const editProfile = async (req, res) => {
+  try {
+    const doctor = await Doctor.findByIdAndUpdate(req.params.id, req.body, {
+      runValidators: true,
+      new: true,
+    });
+
+    if (!doctor) {
+      return res.status(400).json({
+        success: true,
+        message: "Profile nt found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "profile updated successfuly",
+      doctor,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteProfile = async (req, res) => {
+  try {
+    const doctor = await Doctor.findByIdAndDelete(req.params.id);
+    console.log(doctor);
+    if (!doctor) {
+      return res.status(400).json({
+        success: false,
+        message: "Profile not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile deleted successfully",
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getAllDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find();
+    if (!doctors) {
+      return res.status(400).json({
+        success: false,
+        message: "Doctors not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "All doctors found successfully",
+      doctors,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(200).json({
+      success: true,
+      message: "All doctors found successfully",
+    });
+  }
 };

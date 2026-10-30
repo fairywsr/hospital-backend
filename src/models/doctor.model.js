@@ -28,7 +28,7 @@ const doctorSchema = new mongoose.Schema(
       required: true,
     },
     license: {
-      type: String,
+      type: Number,
       required: true,
     },
     age: {
