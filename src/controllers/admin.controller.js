@@ -1,0 +1,110 @@
+import Admin from "../models/admin.model.js";
+
+export const register = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    console.log(req.body);
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
+    // check is user already exist with this email
+    const existingUser = await Admin.findOne({ email });
+
+    if (existingUser) {
+      return res.status(401).json({
+        success: false,
+        message: "user already exist",
+      });
+    }
+
+    // create admin in db
+    const user = await Admin.create({ name, email, password });
+
+    return res.status(200).json({
+      success: true,
+      message: "Admin registered successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
+  }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if ((!email, !password)) {
+      return res.status(400).json({
+        success: false,
+        message: "all fields are required",
+      });
+    }
+    console.log("52");
+    // search user in db..
+    const user = await Admin.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "user not found",
+      });
+    }
+
+    console.log("62");
+    // check user password is correct
+    const correctPassword = await user.isPasswordCorrect(password);
+
+    if (!correctPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "inValid credentials.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User login in successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
+  }
+};
+
+export const profile = async (req, res) => {
+  try {
+    const { id } = req.params.id;
+
+    const profile = await Admin.findOne({ id });
+    if (!profile) {
+      return res.status(400).json({
+        success: true,
+        message: "Profile not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Profile fetched successfully",
+      profile,
+    });
+  } catch (error) {
+    console.log(error.name);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};

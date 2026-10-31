@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import dbConnect from "./db/connectDB.js";
 import patientRouter from "./routes/patient.router.js";
 import doctorRouter from "./routes/doctor.router.js";
+import adminRouter from "./routes/admin.router.js";
 
 dotenv.config({ path: ".env" });
 
@@ -19,6 +20,8 @@ app.use(express.json()); // to read json data
 // APIs
 app.use("/api/patient", patientRouter);
 app.use("/api/doctor", doctorRouter);
+app.use("/api/admin", adminRouter);
+
 app.listen(port, () => {
   console.log(`app is running on ${port}`);
 });
