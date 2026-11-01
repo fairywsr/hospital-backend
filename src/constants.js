@@ -30,3 +30,5 @@ export const doctorsProfileStatus = [
   "Approved",
   "Issue in Documents",
 ];
+
+export const Roles = ["Patient", "Doctor", "Admin"];

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { Roles } from "../constants";
 
 const adminSchema = new mongoose.Schema(
   {
@@ -11,6 +12,11 @@ const adminSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+    },
+    role: {
+      type: String,
+      enum: Roles,
+      default: "Admin",
     },
   },
   {

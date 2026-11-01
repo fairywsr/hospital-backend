@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { BLOOD_GROUPS, GENDERS } from "../constants.js";
+import { BLOOD_GROUPS, GENDERS, Roles } from "../constants.js";
 const patietSchema = new mongoose.Schema(
   {
     name: {
@@ -34,6 +34,11 @@ const patietSchema = new mongoose.Schema(
     disease: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      enum: Roles,
+      default: "Patient",
     },
   },
   { timestamps: true },

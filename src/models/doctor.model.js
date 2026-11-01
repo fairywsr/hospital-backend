@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { doctorsProfileStatus, DOCTORSTYPES, GENDERS } from "../constants.js";
+import {
+  doctorsProfileStatus,
+  DOCTORSTYPES,
+  GENDERS,
+  Roles,
+} from "../constants.js";
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -52,6 +57,9 @@ const doctorSchema = new mongoose.Schema(
       enum: doctorsProfileStatus,
       default: "Pending",
     },
+    type: String,
+    enum: Roles,
+    default: "Doctor",
   },
   { timestamps: true },
 );
