@@ -108,3 +108,60 @@ export const profile = async (req, res) => {
     });
   }
 };
+
+export const updateProdile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("id", id);
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid id Profile not found",
+      });
+    }
+
+    const user = await Admin.findByIdAndUpdate(id, req.body, {
+      runValidators: true,
+      new: true,
+    });
+    console.log(user);
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error.name);
+    return res.status(200).json({
+      success: false,
+      message: "internal server error",
+    });
+  }
+};
+
+export const deleteProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Id, Profile not found",
+      });
+    }
+
+    const user = await Admin.findByIdAndDelete(id);
+    console.log(user);
+    return res.status(200).json({
+      success: true,
+      message: "Profile deleted successfully",
+    });
+  } catch (error) {
+    console.log(error.name);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
+  }
+};

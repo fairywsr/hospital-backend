@@ -57,9 +57,11 @@ const doctorSchema = new mongoose.Schema(
       enum: doctorsProfileStatus,
       default: "Pending",
     },
-    type: String,
-    enum: Roles,
-    default: "Doctor",
+    role: {
+      type: String,
+      enum: Roles,
+      default: "Doctor",
+    },
   },
   { timestamps: true },
 );

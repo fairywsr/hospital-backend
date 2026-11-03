@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import { Roles } from "../constants";
+import { Roles } from "../constants.js";
 
 const adminSchema = new mongoose.Schema(
   {
