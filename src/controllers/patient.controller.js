@@ -84,15 +84,17 @@ export const patientLogin = async (req, res) => {
       res.status(200).json({ success: false, message: "Invalid credentials" });
     }
 
-    return res
-      .status(200)
-      .json({ success: true, message: "login successfully", user });
+    return sendToken(user, 200, res);
+    // return res
+    //   .status(200)
+    //   .json({ success: true, message: "login successfully", user });
   } catch (error) {
     return res
       .status(500)
       .json({ success: false, message: "Internal server error", error });
   }
 };
+
 // Patient Profile
 export const patientProfile = async (req, res) => {
   try {

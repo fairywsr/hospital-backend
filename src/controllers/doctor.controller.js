@@ -1,5 +1,4 @@
 import Doctor from "../models/doctor.model.js";
-import isPasswordCorrect from "../models/doctor.model.js";
 // doctor register api
 export const registerDoctor = async (req, res) => {
   try {
@@ -100,11 +99,12 @@ export const loginDoctor = async (req, res) => {
       });
     }
     console.log(102);
-    return res.status(200).json({
-      success: true,
-      message: "user Login in successfully",
-      user: user,
-    });
+    return sendToken(user, 200, res);
+    // return res.status(200).json({
+    //   success: true,
+    //   message: "user Login in successfully",
+    //   user: user,
+    // });
   } catch (error) {
     return res.status(500).json({
       success: true,

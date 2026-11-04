@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { Roles } from "../constants.js";
-
+import jwt from "jsonwebtoken";
 const adminSchema = new mongoose.Schema(
   {
     name: {
@@ -31,6 +31,19 @@ adminSchema.pre("save", async function () {
 
 adminSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(String(password), this.password);
+};
+
+adminSchema.methods.getJWT = async function () {
+  return await jwt.sign(
+    {
+      id: this._id,
+      role: this.role,
+    },
+    process.env.secretKey,
+    {
+      expiresIn: "7d",
+    },
+  );
 };
 
 const Admin = mongoose.model("Admin", adminSchema);

@@ -55,5 +55,14 @@ patietSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(String(password), this.password);
 };
 
+patietSchema.methods.getJWT = async function () {
+  return await jet.sign(
+    { id: this._id, role: this.role },
+    process.env.secretKey,
+    {
+      expiresIn: "7d",
+    },
+  );
+};
 const Patient = mongoose.model("Patient", patietSchema);
 export default Patient;
