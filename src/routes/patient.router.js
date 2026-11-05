@@ -7,13 +7,14 @@ import {
   registerPatient,
   updateProfile,
 } from "../controllers/patient.controller.js";
+import { isAuthenticatedUser } from "../utils/auth.js";
 
 const patientRouter = Router();
 
 patientRouter.post("/register-patient", registerPatient);
 patientRouter.post("/patient-login", patientLogin);
-patientRouter.get("/profile/:id", patientProfile);
-patientRouter.put("/update-profile/:id", updateProfile);
-patientRouter.delete("/delete-profile/:id", deleteProfile);
-patientRouter.get("/all-patients", allPatients);
+patientRouter.get("/profile/:id", isAuthenticatedUser, patientProfile);
+patientRouter.put("/update-profile/:id", isAuthenticatedUser, updateProfile);
+patientRouter.delete("/delete-profile/:id", isAuthenticatedUser, deleteProfile);
+patientRouter.get("/all-patients", isAuthenticatedUser, allPatients);
 export default patientRouter;

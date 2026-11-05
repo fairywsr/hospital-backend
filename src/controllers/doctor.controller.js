@@ -1,4 +1,5 @@
 import Doctor from "../models/doctor.model.js";
+import { sendToken } from "../utils/token.js";
 // doctor register api
 export const registerDoctor = async (req, res) => {
   try {
@@ -81,16 +82,16 @@ export const loginDoctor = async (req, res) => {
       });
     }
     console.log(84);
-    const user = await Doctor.findOne({ email });
+    const doctor = await Doctor.findOne({ email });
 
-    if (!user) {
+    if (!doctor) {
       return res.status(200).json({
         success: false,
         message: "User not found",
       });
     }
     console.log(93);
-    const passwordCorrect = await user.isPasswordCorrect(password);
+    const passwordCorrect = await doctor.isPasswordCorrect(password);
 
     if (!passwordCorrect) {
       return res.status(200).json({
@@ -99,7 +100,8 @@ export const loginDoctor = async (req, res) => {
       });
     }
     console.log(102);
-    return sendToken(user, 200, res);
+    const message = "doctor login successfully";
+    return sendToken(doctor, 200, res, message);
     // return res.status(200).json({
     //   success: true,
     //   message: "user Login in successfully",

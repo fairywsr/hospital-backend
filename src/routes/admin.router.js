@@ -6,13 +6,14 @@ import {
   register,
   updateProdile,
 } from "../controllers/admin.controller.js";
+import { isAuthenticatedUser } from "../utils/auth.js";
 
 const adminRouter = Router();
 
 adminRouter.post("/register", register);
 adminRouter.post("/login", login);
-adminRouter.get("/profile/:id", profile);
-adminRouter.post("/profile-update/:id", updateProdile);
-adminRouter.delete("/profile-delete/:id", deleteProfile);
+adminRouter.get("/profile/:id", isAuthenticatedUser, profile);
+adminRouter.post("/profile-update/:id", isAuthenticatedUser, updateProdile);
+adminRouter.delete("/profile-delete/:id", isAuthenticatedUser, deleteProfile);
 
 export default adminRouter;

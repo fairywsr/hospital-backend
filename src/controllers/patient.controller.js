@@ -1,5 +1,5 @@
 import Patient from "../models/patient.model.js";
-
+import { sendToken } from "../utils/token.js";
 // patient Register Api
 export const registerPatient = async (req, res) => {
   try {
@@ -67,24 +67,25 @@ export const patientLogin = async (req, res) => {
         .json({ success: false, message: "All fields are required" });
     }
 
-    const user = await Patient.findOne({ email });
+    const patient = await Patient.findOne({ email });
+    console.log(patient, "login patient 71");
+    console.log("line 51", patient, "db user");
 
-    console.log("line 51", user, "db user");
-
-    if (!user) {
+    if (!patient) {
       return res
         .status(404)
         .json({ success: false, message: "Invalid credentials" });
     }
 
-    const correctPassword = await user.isPasswordCorrect(password);
+    const correctPassword = await patient.isPasswordCorrect(password);
     console.log(correctPassword);
 
     if (!correctPassword) {
       res.status(200).json({ success: false, message: "Invalid credentials" });
     }
 
-    return sendToken(user, 200, res);
+    const message = "patient login successfully";
+    return sendToken(patient, 200, res, message);
     // return res
     //   .status(200)
     //   .json({ success: true, message: "login successfully", user });

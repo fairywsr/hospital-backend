@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { BLOOD_GROUPS, GENDERS, Roles } from "../constants.js";
 const patietSchema = new mongoose.Schema(
@@ -56,7 +57,7 @@ patietSchema.methods.isPasswordCorrect = async function (password) {
 };
 
 patietSchema.methods.getJWT = async function () {
-  return await jet.sign(
+  return await jwt.sign(
     { id: this._id, role: this.role },
     process.env.secretKey,
     {

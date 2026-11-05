@@ -1,5 +1,5 @@
 import Admin from "../models/admin.model.js";
-import { sendToken } from "../models/utils/token.js";
+import { sendToken } from "../utils/token.js";
 
 export const register = async (req, res) => {
   try {
@@ -52,8 +52,8 @@ export const login = async (req, res) => {
     }
     console.log("52");
     // search user in db..
-    const user = await Admin.findOne({ email });
-    if (!user) {
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
       return res.status(400).json({
         success: false,
         message: "user not found",
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
 
     console.log("62");
     // check user password is correct
-    const correctPassword = await user.isPasswordCorrect(password);
+    const correctPassword = await admin.isPasswordCorrect(password);
 
     if (!correctPassword) {
       return res.status(400).json({
@@ -71,7 +71,9 @@ export const login = async (req, res) => {
       });
     }
 
-    return sendToken(user, 200, res);
+    const message = "admin login successfully";
+    console.log("75");
+    return sendToken(admin, 200, res, message);
     // return res.status(200).json({
     //   success: true,
     //   message: "User login in successfully",

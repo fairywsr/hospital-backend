@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import {
   doctorsProfileStatus,
@@ -74,8 +75,9 @@ doctorSchema.pre("save", async function () {
 doctorSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(String(password), this.password);
 };
-doctorSchema.methods.getJWT = async function () {
-  return await jet.sign(
+doctorSchema.methods.getJWT = function () {
+  console.log(process.env.secretKey, "token key");
+  return jwt.sign(
     {
       id: this._id,
       role: this.role,
