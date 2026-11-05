@@ -74,14 +74,13 @@ export const registerDoctor = async (req, res) => {
 export const loginDoctor = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(req.body);
     if (!email || !password) {
       return res.status(200).json({
         success: false,
         message: "All fields are required",
       });
     }
-    console.log(84);
+
     const doctor = await Doctor.findOne({ email });
 
     if (!doctor) {
@@ -90,7 +89,7 @@ export const loginDoctor = async (req, res) => {
         message: "User not found",
       });
     }
-    console.log(93);
+
     const passwordCorrect = await doctor.isPasswordCorrect(password);
 
     if (!passwordCorrect) {
@@ -99,15 +98,11 @@ export const loginDoctor = async (req, res) => {
         message: "Invalid Credentials",
       });
     }
-    console.log(102);
+
     const message = "doctor login successfully";
     return sendToken(doctor, 200, res, message);
-    // return res.status(200).json({
-    //   success: true,
-    //   message: "user Login in successfully",
-    //   user: user,
-    // });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       success: true,
       message: "Internal server error",

@@ -33,8 +33,8 @@ adminSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(String(password), this.password);
 };
 
-adminSchema.methods.getJWT = async function () {
-  return await jwt.sign(
+adminSchema.methods.getJWT = function () {
+  return jwt.sign(
     {
       id: this._id,
       role: this.role,

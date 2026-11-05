@@ -4,6 +4,7 @@ import dbConnect from "./db/connectDB.js";
 import patientRouter from "./routes/patient.router.js";
 import doctorRouter from "./routes/doctor.router.js";
 import adminRouter from "./routes/admin.router.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config({ path: ".env" });
 
@@ -16,7 +17,7 @@ const port = process.env.PORT || 3000;
 dbConnect();
 
 app.use(express.json()); // to read json data
-
+app.use(cookieParser());
 // APIs
 app.use("/api/patient", patientRouter);
 app.use("/api/doctor", doctorRouter);

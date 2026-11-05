@@ -5,7 +5,9 @@ import Admin from "../models/admin.model.js";
 
 export const isAuthenticatedUser = async (req, res, next) => {
   try {
-    const { token } = req.cookies();
+    const token = req.cookies?.token;
+    console.log(req.cookies?.token, "line 9 in isAuthenticated");
+    console.log(token, "in auth 9");
     if (!token) {
       return res.status(400).json({
         success: false,
@@ -14,12 +16,13 @@ export const isAuthenticatedUser = async (req, res, next) => {
     }
 
     const decodedData = jwt.verify(token, process.env.secretKey);
+    console.log(decodedData, "18");
     let user;
     if (decodedData.role === "Doctor") {
       user = await Doctor.findById(decodedData.id);
-    } else if (decodedData.role === "patient") {
+    } else if (decodedData.role === "Patient") {
       user = await Patient.findById(decodedData.id);
-    } else if (decodedData.role === "admin") {
+    } else if (decodedData.role === "Admin") {
       user = await Admin.findById(decodedData.id);
     }
 
@@ -41,4 +44,17 @@ export const isAuthenticatedUser = async (req, res, next) => {
       message: "Internal server error",
     });
   }
+  next();
+};
+
+export const authoriseRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(400).json({
+        success: false,
+        message: "You are not authorised to access this role",
+      });
+    }
+    next();
+  };
 };

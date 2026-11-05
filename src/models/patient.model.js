@@ -51,19 +51,13 @@ patietSchema.pre("save", async function () {
 });
 
 patietSchema.methods.isPasswordCorrect = async function (password) {
-  console.log("password from user", typeof password);
-  console.log("Password from db", typeof this.password);
   return await bcrypt.compare(String(password), this.password);
 };
 
-patietSchema.methods.getJWT = async function () {
-  return await jwt.sign(
-    { id: this._id, role: this.role },
-    process.env.secretKey,
-    {
-      expiresIn: "7d",
-    },
-  );
+patietSchema.methods.getJWT = function () {
+  return jwt.sign({ id: this._id, role: this.role }, process.env.secretKey, {
+    expiresIn: "7d",
+  });
 };
 const Patient = mongoose.model("Patient", patietSchema);
 export default Patient;

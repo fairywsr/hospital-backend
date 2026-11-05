@@ -60,7 +60,6 @@ export const registerPatient = async (req, res) => {
 export const patientLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(req.body);
     if (!email || !password) {
       return res
         .status(400)
@@ -68,13 +67,11 @@ export const patientLogin = async (req, res) => {
     }
 
     const patient = await Patient.findOne({ email });
-    console.log(patient, "login patient 71");
-    console.log("line 51", patient, "db user");
 
     if (!patient) {
       return res
         .status(404)
-        .json({ success: false, message: "Invalid credentials" });
+        .json({ success: false, message: "patient not found" });
     }
 
     const correctPassword = await patient.isPasswordCorrect(password);

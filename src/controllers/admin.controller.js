@@ -90,9 +90,9 @@ export const login = async (req, res) => {
 
 export const profile = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
 
-    const profile = await Admin.findOne({ id });
+    const profile = await Admin.findById(id);
     if (!profile) {
       return res.status(400).json({
         success: true,
@@ -105,7 +105,7 @@ export const profile = async (req, res) => {
       profile,
     });
   } catch (error) {
-    console.log(error.name);
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",

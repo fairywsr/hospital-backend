@@ -76,7 +76,6 @@ doctorSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(String(password), this.password);
 };
 doctorSchema.methods.getJWT = function () {
-  console.log(process.env.secretKey, "token key");
   return jwt.sign(
     {
       id: this._id,
