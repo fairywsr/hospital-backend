@@ -1,6 +1,8 @@
 import { Router } from "express";
 import {
   deleteProfile,
+  doctorLogout,
+  doctorogout,
   doctorProfile,
   editProfile,
   getAllDoctors,
@@ -13,6 +15,7 @@ const doctorRouter = Router();
 
 doctorRouter.post("/register-doctor", registerDoctor);
 doctorRouter.post("/login", loginDoctor);
+adminRouter.get("logout", isAuthenticatedUser, doctorLogout);
 doctorRouter.get(
   "/profile/:id",
   isAuthenticatedUser,

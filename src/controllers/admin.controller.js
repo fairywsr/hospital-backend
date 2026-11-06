@@ -40,7 +40,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {
+export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -164,6 +164,25 @@ export const deleteProfile = async (req, res) => {
   } catch (error) {
     console.log(error.name);
     return res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
+  }
+};
+
+export const adminLogout = async (req, res) => {
+  try {
+    res.cookie("token", null, {
+      expireIn: new Date(Date.now()),
+      httpOnlt: true,
+    });
+
+    return res.status(200).json({
+      sucess: true,
+      message: "Admin logout successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
       success: false,
       message: "internal server error",
     });

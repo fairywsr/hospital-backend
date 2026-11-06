@@ -213,3 +213,22 @@ export const getAllDoctors = async (req, res) => {
     });
   }
 };
+
+export const doctorLogout = async (req, res) => {
+  try {
+    res.cookie("token", null, {
+      expireIn: new Date(Date.now()),
+      httpOnlt: true,
+    });
+
+    return res.status(200).json({
+      sucess: true,
+      message: "Doctor logout successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
+  }
+};
