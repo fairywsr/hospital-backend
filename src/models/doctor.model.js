@@ -7,6 +7,7 @@ import {
   GENDERS,
   Roles,
 } from "../constants.js";
+import { sendMail } from "../utils/sendMail.js";
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -63,6 +64,8 @@ const doctorSchema = new mongoose.Schema(
       enum: Roles,
       default: "Doctor",
     },
+    resetPasswordToken: String,
+    resetPasswordExpiry: String,
   },
   { timestamps: true },
 );
@@ -71,7 +74,6 @@ doctorSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
 });
-
 doctorSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(String(password), this.password);
 };
@@ -85,5 +87,16 @@ doctorSchema.methods.getJWT = function () {
     { expiresIn: "7d" },
   );
 };
+
+doctorSchema.methods.resetPassword = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  this.resetPassword = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+  return resetToken;
+};
+
 const Doctor = mongoose.model("doctor", doctorSchema);
 export default Doctor;

@@ -188,3 +188,38 @@ export const adminLogout = async (req, res) => {
     });
   }
 };
+export const resetPasswordRequest = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const admin = Admin.findOne({ email });
+    if (!admin) {
+      return res.status(500).json({
+        success: false,
+        message: "invalid email",
+      });
+    }
+
+    let resetToken = await admin.resetPassword();
+    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password${resetToken}`;
+    const message = `if You want to reset Your Password please click on this link ${resetPasswordURL}`;
+
+    await sendMail({
+      email: admin.email,
+      subject: "Reset Password Request",
+      message,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `email send successfully to ${admin.email}`,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error,
+    });
+  }
+};

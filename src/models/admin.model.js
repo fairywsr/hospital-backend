@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { Roles } from "../constants.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 const adminSchema = new mongoose.Schema(
   {
     name: {
@@ -18,6 +19,8 @@ const adminSchema = new mongoose.Schema(
       enum: Roles,
       default: "Admin",
     },
+    resetPassword: String,
+    resetPasswordExpire: String,
   },
   {
     timestamps: true,
@@ -46,5 +49,14 @@ adminSchema.methods.getJWT = function () {
   );
 };
 
+adminSchema.methods.resetPassword = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+  return resetToken;
+};
 const Admin = mongoose.model("Admin", adminSchema);
 export default Admin;

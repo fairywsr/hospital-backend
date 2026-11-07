@@ -232,3 +232,39 @@ export const doctorLogout = async (req, res) => {
     });
   }
 };
+
+export const resetPasswordRequest = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const doctor = Doctor.findOne({ email });
+    if (!doctor) {
+      return res.status(500).json({
+        success: false,
+        message: "invalid email",
+      });
+    }
+
+    let resetToken = await user.resetPassword();
+    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password${resetToken}`;
+    const message = `if You want to reset Your Password please click on this link ${resetPasswordURL}`;
+
+    await sendMail({
+      email: doctor.email,
+      subject: "Reset Password Request",
+      message,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: `email send successfully to ${doctor.email}`,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error,
+    });
+  }
+};

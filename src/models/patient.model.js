@@ -41,6 +41,8 @@ const patietSchema = new mongoose.Schema(
       enum: Roles,
       default: "Patient",
     },
+    resetPasswordToken: String,
+    resetPasswordExpiry: String,
   },
   { timestamps: true },
 );
@@ -58,6 +60,13 @@ patietSchema.methods.getJWT = function () {
   return jwt.sign({ id: this._id, role: this.role }, process.env.secretKey, {
     expiresIn: "7d",
   });
+};
+
+patietSchema.methods.resetPassword = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  this.password = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.resetPasswordExpiry = Date.now() + 30 * 60 * 1000;
+  return resetToken;
 };
 const Patient = mongoose.model("Patient", patietSchema);
 export default Patient;
