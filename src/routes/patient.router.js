@@ -6,6 +6,7 @@ import {
   patientLogout,
   patientProfile,
   registerPatient,
+  resetPasswordRequest,
   updateProfile,
 } from "../controllers/patient.controller.js";
 import { authoriseRoles, isAuthenticatedUser } from "../utils/auth.js";
@@ -24,4 +25,5 @@ patientRouter.get(
   authoriseRoles("admin"),
   allPatients,
 );
+patientRouter.put("/reset-password-request", resetPasswordRequest);
 export default patientRouter;
