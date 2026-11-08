@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import {
   doctorsProfileStatus,
   DOCTORSTYPES,
   GENDERS,
   Roles,
 } from "../constants.js";
-import { sendMail } from "../utils/sendMail.js";
 
 const doctorSchema = new mongoose.Schema(
   {
@@ -65,7 +65,7 @@ const doctorSchema = new mongoose.Schema(
       default: "Doctor",
     },
     resetPasswordToken: String,
-    resetPasswordExpiry: String,
+    resetPasswordExpiry: Date,
   },
   { timestamps: true },
 );
@@ -90,11 +90,11 @@ doctorSchema.methods.getJWT = function () {
 
 doctorSchema.methods.resetPassword = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
-  this.resetPassword = crypto
+  this.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
-  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+  this.resetPasswordExpiry = Date.now() + 30 * 60 * 1000;
   return resetToken;
 };
 

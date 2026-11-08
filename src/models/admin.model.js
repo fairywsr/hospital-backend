@@ -19,7 +19,7 @@ const adminSchema = new mongoose.Schema(
       enum: Roles,
       default: "Admin",
     },
-    resetPassword: String,
+    resetPasswordToken: String,
     resetPasswordExpire: String,
   },
   {

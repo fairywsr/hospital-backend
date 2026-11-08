@@ -15,7 +15,7 @@ const patientRouter = Router();
 
 patientRouter.post("/register-patient", registerPatient);
 patientRouter.post("/patient-login", patientLogin);
-adminRouter.get("logout", isAuthenticatedUser, patientLogout);
+patientRouter.get("logout", isAuthenticatedUser, patientLogout);
 patientRouter.get("/profile/:id", isAuthenticatedUser, patientProfile);
 patientRouter.put("/update-profile/:id", isAuthenticatedUser, updateProfile);
 patientRouter.delete("/delete-profile/:id", isAuthenticatedUser, deleteProfile);
@@ -25,5 +25,5 @@ patientRouter.get(
   authoriseRoles("admin"),
   allPatients,
 );
-patientRouter.put("/reset-password-request", resetPasswordRequest);
+patientRouter.post("/reset-password-request", resetPasswordRequest);
 export default patientRouter;

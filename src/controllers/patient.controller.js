@@ -217,7 +217,7 @@ export const resetPasswordRequest = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const patient = Patient.findOne({ email });
+    const patient = await Patient.findOne({ email });
     if (!patient) {
       return res.status(500).json({
         success: false,
@@ -226,7 +226,7 @@ export const resetPasswordRequest = async (req, res) => {
     }
 
     let resetToken = await patient.resetPassword();
-    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password${resetToken}`;
+    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     const message = `if You want to reset Your Password please click on this link ${resetPasswordURL}`;
 
     await sendMail({

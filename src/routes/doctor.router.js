@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   deleteProfile,
   doctorLogout,
-  doctorogout,
   doctorProfile,
   editProfile,
   getAllDoctors,
@@ -16,7 +15,7 @@ const doctorRouter = Router();
 
 doctorRouter.post("/register-doctor", registerDoctor);
 doctorRouter.post("/login", loginDoctor);
-adminRouter.get("logout", isAuthenticatedUser, doctorLogout);
+doctorRouter.get("logout", isAuthenticatedUser, doctorLogout);
 doctorRouter.get(
   "/profile/:id",
   isAuthenticatedUser,
@@ -26,5 +25,5 @@ doctorRouter.get(
 doctorRouter.put("/update-profile/:id", isAuthenticatedUser, editProfile);
 doctorRouter.delete("/delete-profile/:id", isAuthenticatedUser, deleteProfile);
 doctorRouter.get("/all-doctors", isAuthenticatedUser, getAllDoctors);
-doctorRouter.put("/reset-password-request", resetPasswordRequest);
+doctorRouter.post("/reset-password-request", resetPasswordRequest);
 export default doctorRouter;

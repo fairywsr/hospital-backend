@@ -1,5 +1,6 @@
 import Doctor from "../models/doctor.model.js";
 import { sendToken } from "../utils/token.js";
+import { sendMail } from "../utils/sendMail.js";
 // doctor register api
 export const registerDoctor = async (req, res) => {
   try {
@@ -237,7 +238,7 @@ export const resetPasswordRequest = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const doctor = Doctor.findOne({ email });
+    const doctor = await Doctor.findOne({ email });
     if (!doctor) {
       return res.status(500).json({
         success: false,
@@ -245,9 +246,14 @@ export const resetPasswordRequest = async (req, res) => {
       });
     }
 
-    let resetToken = await user.resetPassword();
-    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password${resetToken}`;
+    console.log(`line 248 ${doctor}`);
+    let resetToken = await doctor.resetPassword();
+    console.log("resetToken-250", resetToken);
+    await doctor.save();
+
+    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     const message = `if You want to reset Your Password please click on this link ${resetPasswordURL}`;
+    console.log("line 252", doctor.email);
 
     await sendMail({
       email: doctor.email,

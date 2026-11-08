@@ -192,7 +192,7 @@ export const resetPasswordRequest = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const admin = Admin.findOne({ email });
+    const admin = await Admin.findOne({ email });
     if (!admin) {
       return res.status(500).json({
         success: false,
@@ -201,7 +201,7 @@ export const resetPasswordRequest = async (req, res) => {
     }
 
     let resetToken = await admin.resetPassword();
-    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password${resetToken}`;
+    const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     const message = `if You want to reset Your Password please click on this link ${resetPasswordURL}`;
 
     await sendMail({
