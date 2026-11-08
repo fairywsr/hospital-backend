@@ -11,6 +11,9 @@ const patietSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
+      lowercase: true,
+      required: true,
       required: true,
     },
     phone: {
@@ -43,7 +46,7 @@ const patietSchema = new mongoose.Schema(
       default: "Patient",
     },
     resetPasswordToken: String,
-    resetPasswordExpiry: String,
+    resetPasswordExpiry: Date,
   },
   { timestamps: true },
 );

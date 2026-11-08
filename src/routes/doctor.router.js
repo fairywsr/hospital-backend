@@ -8,6 +8,7 @@ import {
   loginDoctor,
   registerDoctor,
   resetPasswordRequest,
+  resetPassword,
 } from "../controllers/doctor.controller.js";
 import { authoriseRoles, isAuthenticatedUser } from "../utils/auth.js";
 
@@ -26,4 +27,5 @@ doctorRouter.put("/update-profile/:id", isAuthenticatedUser, editProfile);
 doctorRouter.delete("/delete-profile/:id", isAuthenticatedUser, deleteProfile);
 doctorRouter.get("/all-doctors", isAuthenticatedUser, getAllDoctors);
 doctorRouter.post("/reset-password-request", resetPasswordRequest);
+doctorRouter.put("/reset-Password/:token", resetPassword);
 export default doctorRouter;

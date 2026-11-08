@@ -1,6 +1,7 @@
 import Doctor from "../models/doctor.model.js";
 import { sendToken } from "../utils/token.js";
 import { sendMail } from "../utils/sendMail.js";
+import crypto from "crypto";
 // doctor register api
 export const registerDoctor = async (req, res) => {
   try {
@@ -271,6 +272,53 @@ export const resetPasswordRequest = async (req, res) => {
       success: false,
       message: "internal server error",
       error,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const doctor = await Doctor.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!doctor) {
+      return res.status(200).json({
+        success: false,
+        message: "Invalid token or time has been expired",
+      });
+    }
+
+    const { password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(409).json({
+        success: false,
+        message: "password and confirm password dont matched",
+      });
+    }
+
+    doctor.password = password;
+    doctor.resetPasswordToken = undefined;
+    doctor.resetPasswordExpire = undefined;
+    await doctor.save();
+    return res.status(200).json({
+      success: true,
+      message: "Password update successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
     });
   }
 };

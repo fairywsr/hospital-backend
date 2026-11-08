@@ -10,6 +10,10 @@ const adminSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
+      lowercase: true,
+      required: true,
+      required: true,
     },
     password: {
       type: String,
@@ -20,7 +24,7 @@ const adminSchema = new mongoose.Schema(
       default: "Admin",
     },
     resetPasswordToken: String,
-    resetPasswordExpire: String,
+    resetPasswordExpire: Date,
   },
   {
     timestamps: true,

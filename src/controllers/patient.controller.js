@@ -1,5 +1,6 @@
 import Patient from "../models/patient.model.js";
 import { sendToken } from "../utils/token.js";
+import crypto from "crypto";
 // patient Register Api
 export const registerPatient = async (req, res) => {
   try {
@@ -226,6 +227,7 @@ export const resetPasswordRequest = async (req, res) => {
     }
 
     let resetToken = await patient.resetPassword();
+    await admin.save();
     const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     const message = `if You want to reset Your Password please click on this link ${resetPasswordURL}`;
 
@@ -245,6 +247,54 @@ export const resetPasswordRequest = async (req, res) => {
       success: false,
       message: "internal server error",
       error,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const patient = await Patient.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!patient) {
+      return res.status(200).json({
+        success: false,
+        message: "Invalid token or time has been expired",
+      });
+    }
+
+    const { password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(409).json({
+        success: false,
+        message: "password and confirm password dont matched",
+      });
+    }
+
+    patient.password = password;
+    patient.resetPasswordToken = undefined;
+    patient.resetPasswordExpiry = undefined;
+    await patient.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Password update successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
     });
   }
 };

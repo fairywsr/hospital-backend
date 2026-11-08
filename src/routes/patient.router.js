@@ -8,6 +8,7 @@ import {
   registerPatient,
   resetPasswordRequest,
   updateProfile,
+  resetPassword,
 } from "../controllers/patient.controller.js";
 import { authoriseRoles, isAuthenticatedUser } from "../utils/auth.js";
 
@@ -26,4 +27,5 @@ patientRouter.get(
   allPatients,
 );
 patientRouter.post("/reset-password-request", resetPasswordRequest);
+patientRouter.put("/reset-Password/:token", resetPassword);
 export default patientRouter;

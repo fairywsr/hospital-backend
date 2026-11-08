@@ -1,6 +1,7 @@
 import Admin from "../models/admin.model.js";
 import { sendToken } from "../utils/token.js";
-
+import crypto from "crypto";
+import { sendMail } from "../utils/sendMail.js";
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -188,6 +189,7 @@ export const adminLogout = async (req, res) => {
     });
   }
 };
+
 export const resetPasswordRequest = async (req, res) => {
   try {
     const { email } = req.body;
@@ -201,6 +203,7 @@ export const resetPasswordRequest = async (req, res) => {
     }
 
     let resetToken = await admin.resetPassword();
+    await admin.save();
     const resetPasswordURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     const message = `if You want to reset Your Password please click on this link ${resetPasswordURL}`;
 
@@ -220,6 +223,53 @@ export const resetPasswordRequest = async (req, res) => {
       success: false,
       message: "internal server error",
       error,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const admin = await Admin.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!admin) {
+      return res.status(200).json({
+        success: false,
+        message: "Invalid token or time has been expired",
+      });
+    }
+
+    const { password, confirmPassword } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "password and confirm password dont matched",
+      });
+    }
+
+    admin.password = password;
+    admin.resetPasswordToken = undefined;
+    admin.resetPasswordExpire = undefined;
+    await admin.save();
+    return res.status(409).json({
+      success: true,
+      message: "Password update successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
     });
   }
 };

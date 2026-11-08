@@ -5,6 +5,7 @@ import {
   deleteProfile,
   profile,
   register,
+  resetPassword,
   resetPasswordRequest,
   updateProdile,
 } from "../controllers/admin.controller.js";
@@ -19,4 +20,5 @@ adminRouter.get("/profile/:id", isAuthenticatedUser, profile);
 adminRouter.post("/profile-update/:id", isAuthenticatedUser, updateProdile);
 adminRouter.delete("/profile-delete/:id", isAuthenticatedUser, deleteProfile);
 adminRouter.post("/reset-password-request", resetPasswordRequest);
+adminRouter.put("/reset-Password/:token", resetPassword);
 export default adminRouter;
