@@ -7,8 +7,12 @@ import {
   getAllDoctors,
   loginDoctor,
   registerDoctor,
-  resetPasswordRequest,
-  resetPassword,
+  updatePasswordDoctor,
+  resetPasswordRequestDoctor,
+  resetPasswordDoctor,
+  approveDoctor,
+  rejectDoctor,
+  pendingDoctors,
 } from "../controllers/doctor.controller.js";
 import { authoriseRoles, isAuthenticatedUser } from "../utils/auth.js";
 
@@ -26,6 +30,25 @@ doctorRouter.get(
 doctorRouter.put("/update-profile/:id", isAuthenticatedUser, editProfile);
 doctorRouter.delete("/delete-profile/:id", isAuthenticatedUser, deleteProfile);
 doctorRouter.get("/all-doctors", isAuthenticatedUser, getAllDoctors);
-doctorRouter.post("/reset-password-request", resetPasswordRequest);
-doctorRouter.put("/reset-Password/:token", resetPassword);
+doctorRouter.post("/reset-password-request", resetPasswordRequestDoctor);
+doctorRouter.put("/reset-Password/:token", resetPasswordDoctor);
+doctorRouter.put("/update-password", isAuthenticatedUser, updatePasswordDoctor);
+doctorRouter.post(
+  "/approve-doctor/:id",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  approveDoctor,
+);
+doctorRouter.post(
+  "/reject-doctor/:id",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  rejectDoctor,
+);
+doctorRouter.get(
+  "/pending-status",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  pendingDoctors,
+);
 export default doctorRouter;

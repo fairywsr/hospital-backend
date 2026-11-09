@@ -2,6 +2,7 @@ import Admin from "../models/admin.model.js";
 import { sendToken } from "../utils/token.js";
 import crypto from "crypto";
 import { sendMail } from "../utils/sendMail.js";
+
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -190,7 +191,7 @@ export const adminLogout = async (req, res) => {
   }
 };
 
-export const resetPasswordRequest = async (req, res) => {
+export const resetPasswordRequestAdmin = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -227,7 +228,7 @@ export const resetPasswordRequest = async (req, res) => {
   }
 };
 
-export const resetPassword = async (req, res) => {
+export const resetPasswordAdmin = async (req, res) => {
   try {
     const { token } = req.params;
 
@@ -270,6 +271,38 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "internal server error",
+    });
+  }
+};
+
+export const updatePasswordAdmin = async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const admin = await Admin.findById(req.user.id);
+    if (!admin) {
+      return res.status(400).json({
+        success: false,
+        message: "invalid Id",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "password and confirm Password does not match each other",
+      });
+    }
+
+    admin.password = newPassword;
+    await admin.save();
+
+    const message = "Password updated successfully";
+    sendToken(admin, 200, res, message);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: error,
     });
   }
 };

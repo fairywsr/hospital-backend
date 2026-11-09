@@ -235,7 +235,7 @@ export const doctorLogout = async (req, res) => {
   }
 };
 
-export const resetPasswordRequest = async (req, res) => {
+export const resetPasswordRequestDoctor = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -276,7 +276,7 @@ export const resetPasswordRequest = async (req, res) => {
   }
 };
 
-export const resetPassword = async (req, res) => {
+export const resetPasswordDoctor = async (req, res) => {
   try {
     const { token } = req.params;
 
@@ -319,6 +319,128 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "internal server error",
+    });
+  }
+};
+
+export const updatePasswordDoctor = async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const doctor = await Doctor.findById(req.user.id);
+    if (!doctor) {
+      return res.status(400).json({
+        success: false,
+        message: "invalid Id",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "password and confirm Password does not match each other",
+      });
+    }
+
+    doctor.password = newPassword;
+    await doctor.save();
+
+    const message = "Password updated successfully";
+    sendToken(doctor, 200, res, message);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: error,
+    });
+  }
+};
+
+export const approveDoctor = async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id);
+    if (!doctor) {
+      return res.status(200).json({
+        success: false,
+        message: "doctor not found or invalid doctor id",
+      });
+    }
+    if (doctor.status === "Approved") {
+      return res.status(400).json({
+        success: false,
+        message: "doctor is already approved",
+      });
+    }
+
+    doctor.status = "Approved";
+    await doctor.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Doctor profile approved successfully",
+      doctor,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error,
+    });
+  }
+};
+
+export const rejectDoctor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const doctor = await Doctor.findById(id);
+
+    if (!doctor) {
+      return res.status(200).json({
+        success: false,
+        message: "doctor not found or invalid is",
+      });
+    }
+
+    doctor.status = "Rejected";
+    await doctor.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Doctor rejected successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error,
+    });
+  }
+};
+
+export const pendingDoctors = async (req, res) => {
+  try {
+    const pendingDoctors = await Doctor.find({
+      status: "Pending",
+    });
+
+    if (!pendingDoctors) {
+      return res.status(200).json({
+        success: true,
+        message: `${pendingDoctors} found`,
+      });
+    }
+
+    return res.status(200).json({
+      success: false,
+      pendingDoctors,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error,
     });
   }
 };

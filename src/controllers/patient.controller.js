@@ -214,7 +214,7 @@ export const patientLogout = async (req, res) => {
   }
 };
 
-export const resetPasswordRequest = async (req, res) => {
+export const resetPasswordRequestPatient = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -251,7 +251,7 @@ export const resetPasswordRequest = async (req, res) => {
   }
 };
 
-export const resetPassword = async (req, res) => {
+export const resetPasswordPatient = async (req, res) => {
   try {
     const { token } = req.params;
 
@@ -295,6 +295,38 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "internal server error",
+    });
+  }
+};
+
+export const updatePasswordPatient = async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const patient = await Patient.findById(req.user.id);
+    if (!patient) {
+      return res.status(400).json({
+        success: false,
+        message: "invalid Id",
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "password and confirm Password does not match each other",
+      });
+    }
+
+    patient.password = newPassword;
+    await patient.save();
+
+    const message = "Password updated successfully";
+    sendToken(patient, 200, res, message);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: error,
     });
   }
 };
