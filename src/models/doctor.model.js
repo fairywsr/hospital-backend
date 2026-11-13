@@ -100,5 +100,5 @@ doctorSchema.methods.resetPassword = function () {
   return resetToken;
 };
 
-const Doctor = mongoose.model("doctor", doctorSchema);
+const Doctor = mongoose.model("Doctor", doctorSchema);
 export default Doctor;

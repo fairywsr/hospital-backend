@@ -27,14 +27,14 @@ export const isAuthenticatedUser = async (req, res, next) => {
     }
 
     if (!user) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "user not found inValid id",
       });
     }
 
     req.user = user;
-    req.userRoke = decodedData.Role;
+    req.userRole = decodedData.role;
   } catch (error) {
     console.log(error);
     console.log(error.name);
