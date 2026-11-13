@@ -5,6 +5,7 @@ import patientRouter from "./routes/patient.router.js";
 import doctorRouter from "./routes/doctor.router.js";
 import adminRouter from "./routes/admin.router.js";
 import cookieParser from "cookie-parser";
+import appointmentRouter from "./routes/appoinments.router.js";
 
 dotenv.config({ path: ".env" });
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use("/api/patient", patientRouter);
 app.use("/api/doctor", doctorRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/appointments", appointmentRouter);
 
 app.listen(port, () => {
   console.log(`app is running on ${port}`);
