@@ -1,12 +1,16 @@
 import { Router } from "express";
 import {
+  appointmentDetail,
   approveAppointment,
   cancelAppointment,
   createAppointment,
   getAllAppointmentsAdmin,
+  getAppointmentByStatus,
   getDoctorAppointments,
   getPatientAppointments,
   rejectAppointment,
+  updateAppointmentStatus,
+  deleteAppointment,
 } from "../controllers/appoinments.controller.js";
 import { authoriseRoles, isAuthenticatedUser } from "../utils/auth.js";
 
@@ -52,5 +56,29 @@ appointmentRouter.get(
   isAuthenticatedUser,
   authoriseRoles("Admin"),
   getAllAppointmentsAdmin,
+);
+appointmentRouter.get(
+  "/appointment-detail/:id",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  appointmentDetail,
+);
+appointmentRouter.get(
+  "/status/:status",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  getAppointmentByStatus,
+);
+appointmentRouter.put(
+  "/update-status/:id",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  updateAppointmentStatus,
+);
+appointmentRouter.delete(
+  "/delete/:id",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  deleteAppointment,
 );
 export default appointmentRouter;

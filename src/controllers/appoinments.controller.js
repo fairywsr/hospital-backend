@@ -200,3 +200,107 @@ export const getAllAppointmentsAdmin = async (req, res) => {
     });
   }
 };
+
+export const appointmentDetail = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id)
+      .populate("patient", "name email phone age disease")
+      .populate("doctor", "name email phone specilisation");
+
+    if (!appointment) {
+      return res.status(400).json({
+        success: false,
+        message: "Appointment Not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      appointment,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getAppointmentByStatus = async (req, res) => {
+  try {
+    const { status } = req.params;
+    console.log(status, "line 232");
+
+    const appointments = await Appointment.find({ status })
+      .populate("patient", "name email phone age")
+      .populate("doctor", "name email phone specilization");
+
+    console.log(appointments, "line: 236");
+    if (appointments.length === 0) {
+      return res.status(400).json({
+        success: false,
+        mesage: "appointment not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      appointments,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const updateAppointmentStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    let appointmentStatus = await Appointment.findById(req.params.id);
+    console.log(appointmentStatus, "line263");
+    if (!appointmentStatus) {
+      return res.status(200).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    ((appointmentStatus.status = status), await appointmentStatus.save());
+
+    return res.status(300).json({
+      success: true,
+      message: "status updated successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const deleteAppointment = async (req, res) => {
+  try {
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+
+    if (!appointment) {
+      return res.status(400).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Appointment deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
