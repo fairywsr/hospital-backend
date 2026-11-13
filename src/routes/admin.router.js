@@ -16,7 +16,7 @@ const adminRouter = Router();
 
 adminRouter.post("/register", register);
 adminRouter.post("/login", adminLogin);
-adminRouter.get("logout", isAuthenticatedUser, adminLogout);
+adminRouter.get("/logout", isAuthenticatedUser, adminLogout);
 adminRouter.get("/profile/:id", isAuthenticatedUser, profile);
 adminRouter.post("/profile-update/:id", isAuthenticatedUser, updateProdile);
 adminRouter.delete("/profile-delete/:id", isAuthenticatedUser, deleteProfile);

@@ -20,7 +20,7 @@ const doctorRouter = Router();
 
 doctorRouter.post("/register-doctor", registerDoctor);
 doctorRouter.post("/login", loginDoctor);
-doctorRouter.get("logout", isAuthenticatedUser, doctorLogout);
+doctorRouter.get("/logout", isAuthenticatedUser, doctorLogout);
 doctorRouter.get(
   "/profile/:id",
   isAuthenticatedUser,

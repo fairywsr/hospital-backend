@@ -3,6 +3,7 @@ import {
   approveAppointment,
   cancelAppointment,
   createAppointment,
+  getAllAppointmentsAdmin,
   getDoctorAppointments,
   getPatientAppointments,
   rejectAppointment,
@@ -35,15 +36,21 @@ appointmentRouter.put(
   approveAppointment,
 );
 appointmentRouter.put(
-  "/rejected:/id",
+  "/rejected/:id",
   isAuthenticatedUser,
   authoriseRoles("Doctor"),
   rejectAppointment,
 );
 appointmentRouter.put(
-  "/cancel:/id",
+  "/cancel/:id",
   isAuthenticatedUser,
   authoriseRoles("Doctor"),
   cancelAppointment,
+);
+appointmentRouter.get(
+  "/all",
+  isAuthenticatedUser,
+  authoriseRoles("Admin"),
+  getAllAppointmentsAdmin,
 );
 export default appointmentRouter;

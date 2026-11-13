@@ -175,3 +175,28 @@ export const cancelAppointment = async (req, res) => {
 };
 
 // admin
+export const getAllAppointmentsAdmin = async (req, res) => {
+  try {
+    const allAppointments = await Appointment.find()
+      .populate("patient", "name email phone age disease")
+      .populate("doctor", "name email phone specilization");
+    console.log(allAppointments, 183);
+    if (!allAppointments) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointments not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Appointments fetched successfully",
+      allAppointments,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
