@@ -6,7 +6,7 @@ import doctorRouter from "./routes/doctor.router.js";
 import adminRouter from "./routes/admin.router.js";
 import cookieParser from "cookie-parser";
 import appointmentRouter from "./routes/appoinments.router.js";
-
+import cors from "cors";
 dotenv.config({ path: ".env" });
 
 // MVC // pattern - model view controller
@@ -17,6 +17,15 @@ const port = process.env.PORT || 3000;
 
 dbConnect();
 
+const corsOptions = {
+  origin: [process.env.frontendURL],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["content-type", "Authorization"],
+  credentials: true,
+  maxAge: 600,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json()); // to read json data
 app.use(cookieParser());
 // APIs
