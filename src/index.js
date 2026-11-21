@@ -18,8 +18,8 @@ const port = process.env.PORT || 3000;
 dbConnect();
 
 const corsOptions = {
-  origin: [process.env.frontendURL],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: [process.env.FRONTEND_URL],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["content-type", "Authorization"],
   credentials: true,
   maxAge: 600,
@@ -29,10 +29,10 @@ app.use(cors(corsOptions));
 app.use(express.json()); // to read json data
 app.use(cookieParser());
 // APIs
-app.use("/api/patient", patientRouter);
-app.use("/api/doctor", doctorRouter);
-app.use("/api/admin", adminRouter);
-app.use("/api/appointments", appointmentRouter);
+app.use("/api/v1/patient", patientRouter);
+app.use("/api/v1/doctor", doctorRouter);
+app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/appointments", appointmentRouter);
 
 app.listen(port, () => {
   console.log(`app is running on ${port}`);

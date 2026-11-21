@@ -16,7 +16,7 @@ import { authoriseRoles, isAuthenticatedUser } from "../utils/auth.js";
 
 const appointmentRouter = Router();
 appointmentRouter.post(
-  "/new-appoinment",
+  "/new-appointment",
   isAuthenticatedUser,
   authoriseRoles("Patient"),
   createAppointment,
@@ -40,7 +40,7 @@ appointmentRouter.put(
   approveAppointment,
 );
 appointmentRouter.put(
-  "/rejected/:id",
+  "/reject/:id",
   isAuthenticatedUser,
   authoriseRoles("Doctor"),
   rejectAppointment,

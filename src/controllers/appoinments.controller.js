@@ -132,7 +132,7 @@ export const rejectAppointment = async (req, res) => {
       });
     }
 
-    ((appointment.status = "Rejected"), await appointment.save());
+    ((appointment.status = "Reject"), await appointment.save());
 
     return res.status(200).json({
       success: true,
