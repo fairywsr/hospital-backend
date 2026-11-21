@@ -218,19 +218,20 @@ export const getAllDoctors = async (req, res) => {
 
 export const doctorLogout = async (req, res) => {
   try {
-    res.cookie("token", null, {
-      expireIn: new Date(Date.now()),
-      httpOnlt: true,
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none", // If using cross-origin cookies
     });
 
     return res.status(200).json({
-      sucess: true,
+      success: true,
       message: "Doctor logout successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      message: "internal server error",
+      message: "Internal server error",
     });
   }
 };
@@ -358,6 +359,7 @@ export const updatePasswordDoctor = async (req, res) => {
 export const approveDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.findById(req.params.id);
+    console.log("doctor -------------------------", doctor);
     if (!doctor) {
       return res.status(200).json({
         success: false,

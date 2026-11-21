@@ -175,8 +175,8 @@ export const deleteProfile = async (req, res) => {
 export const adminLogout = async (req, res) => {
   try {
     res.cookie("token", null, {
-      expireIn: new Date(Date.now()),
-      httpOnlt: true,
+      expiresIn: new Date(Date.now()),
+      httpOnly: true,
     });
 
     return res.status(200).json({

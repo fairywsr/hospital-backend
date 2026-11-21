@@ -20,7 +20,7 @@ const doctorRouter = Router();
 
 doctorRouter.post("/register-doctor", registerDoctor);
 doctorRouter.post("/login", loginDoctor);
-doctorRouter.get("/logout", isAuthenticatedUser, doctorLogout);
+doctorRouter.post("/logout", isAuthenticatedUser, doctorLogout);
 doctorRouter.get(
   "/profile/:id",
   isAuthenticatedUser,
@@ -33,13 +33,13 @@ doctorRouter.get("/all-doctors", isAuthenticatedUser, getAllDoctors);
 doctorRouter.post("/reset-password-request", resetPasswordRequestDoctor);
 doctorRouter.put("/reset-Password/:token", resetPasswordDoctor);
 doctorRouter.put("/update-password", isAuthenticatedUser, updatePasswordDoctor);
-doctorRouter.post(
+doctorRouter.put(
   "/approve-doctor/:id",
   isAuthenticatedUser,
   authoriseRoles("Admin"),
   approveDoctor,
 );
-doctorRouter.post(
+doctorRouter.put(
   "/reject-doctor/:id",
   isAuthenticatedUser,
   authoriseRoles("Admin"),
