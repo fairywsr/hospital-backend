@@ -17,15 +17,24 @@ const port = process.env.PORT || 3000;
 
 dbConnect();
 
-const corsOptions = {
-  origin: [process.env.FRONTEND_URL],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["content-type", "Authorization"],
-  credentials: true,
-  maxAge: 600,
-};
+// const corsOptions = {
+//   origin: [process.env.FRONTEND_URL],
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["content-type", "Authorization"],
+//   credentials: true,
+//   maxAge: 600,
+// };
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "https://hospital-frontend-nine-nu.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }),
+);
+
+// app.use(cors(corsOptions));
 app.use(express.json()); // to read json data
 app.use(cookieParser());
 // APIs
