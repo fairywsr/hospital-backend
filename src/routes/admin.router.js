@@ -20,7 +20,7 @@ adminRouter.post("/logout", isAuthenticatedUser, adminLogout);
 adminRouter.get("/profile/:id", isAuthenticatedUser, profile);
 adminRouter.post("/profile-update/:id", isAuthenticatedUser, updateProdile);
 adminRouter.delete("/profile-delete/:id", isAuthenticatedUser, deleteProfile);
-adminRouter.post("/reset-password-request", resetPasswordRequestAdmin);
+adminRouter.put("/reset-password-request", resetPasswordRequestAdmin);
 adminRouter.put("/reset-Password/:token", resetPasswordAdmin);
 adminRouter.post("/update-password", isAuthenticatedUser, updatePasswordAdmin);
 

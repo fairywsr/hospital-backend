@@ -218,10 +218,9 @@ export const getAllDoctors = async (req, res) => {
 
 export const doctorLogout = async (req, res) => {
   try {
-    res.clearCookie("token", {
+    res.cookie("token", null, {
+      expiresIn: new Date(Date.now()),
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none", // If using cross-origin cookies
     });
 
     return res.status(200).json({

@@ -27,7 +27,7 @@ patientRouter.get(
   authoriseRoles("Admin"),
   allPatients,
 );
-patientRouter.post("/reset-password-request", resetPasswordRequestPatient);
+patientRouter.put("/reset-password-request", resetPasswordRequestPatient);
 patientRouter.put("/reset-Password/:token", resetPasswordPatient);
 patientRouter.post(
   "/update-password",

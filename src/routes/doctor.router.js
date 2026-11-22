@@ -30,7 +30,7 @@ doctorRouter.get(
 doctorRouter.put("/update-profile/:id", isAuthenticatedUser, editProfile);
 doctorRouter.delete("/delete-profile/:id", isAuthenticatedUser, deleteProfile);
 doctorRouter.get("/all-doctors", isAuthenticatedUser, getAllDoctors);
-doctorRouter.post("/reset-password-request", resetPasswordRequestDoctor);
+doctorRouter.put("/reset-password-request", resetPasswordRequestDoctor);
 doctorRouter.put("/reset-Password/:token", resetPasswordDoctor);
 doctorRouter.put("/update-password", isAuthenticatedUser, updatePasswordDoctor);
 doctorRouter.put(
