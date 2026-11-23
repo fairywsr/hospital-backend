@@ -25,18 +25,17 @@ dbConnect();
 //   maxAge: 600,
 // };
 
-app.use(
-  cors({
-    origin: "https://hospital-frontend-nine-nu.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-);
+options = {
+  origin: "https://hospital-frontend-nine-nu.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(options));
 app.use(express.json()); // to read json data
 app.use(cookieParser());
+
 // APIs
 app.use("/api/v1/patient", patientRouter);
 app.use("/api/v1/doctor", doctorRouter);
