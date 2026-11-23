@@ -77,7 +77,7 @@ export const loginDoctor = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "All fields are required",
       });
@@ -86,7 +86,7 @@ export const loginDoctor = async (req, res) => {
     const doctor = await Doctor.findOne({ email });
 
     if (!doctor) {
-      return res.status(200).json({
+      return res.status(404).json({
         success: false,
         message: "User not found",
       });
@@ -95,7 +95,7 @@ export const loginDoctor = async (req, res) => {
     const passwordCorrect = await doctor.isPasswordCorrect(password);
 
     if (!passwordCorrect) {
-      return res.status(200).json({
+      return res.status(401).json({
         success: false,
         message: "Invalid Credentials",
       });
@@ -106,7 +106,7 @@ export const loginDoctor = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      success: true,
+      success: false,
       message: "Internal server error",
       error: error,
     });
@@ -360,7 +360,7 @@ export const approveDoctor = async (req, res) => {
     const doctor = await Doctor.findById(req.params.id);
     console.log("doctor -------------------------", doctor);
     if (!doctor) {
-      return res.status(200).json({
+      return res.status(404).json({
         success: false,
         message: "doctor not found or invalid doctor id",
       });
@@ -396,9 +396,9 @@ export const rejectDoctor = async (req, res) => {
     const doctor = await Doctor.findById(id);
 
     if (!doctor) {
-      return res.status(200).json({
+      return res.status(404).json({
         success: false,
-        message: "doctor not found or invalid is",
+        message: "doctor not found or invalid id",
       });
     }
 
@@ -433,7 +433,7 @@ export const pendingDoctors = async (req, res) => {
     }
 
     return res.status(200).json({
-      success: false,
+      success: true,
       pendingDoctors,
     });
   } catch (error) {
