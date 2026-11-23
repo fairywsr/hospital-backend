@@ -17,14 +17,6 @@ const port = process.env.PORT || 3000;
 
 dbConnect();
 
-// const corsOptions = {
-//   origin: [process.env.FRONTEND_URL],
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["content-type", "Authorization"],
-//   credentials: true,
-//   maxAge: 600,
-// };
-
 const options = {
   origin: "https://hospital-frontend-nine-nu.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
