@@ -18,7 +18,10 @@ const port = process.env.PORT || 3000;
 dbConnect();
 
 const options = {
-  origin: "https://hospital-frontend-nine-nu.vercel.app",
+  origin: [
+    "https://hospital-frontend-nine-nu.vercel.app",
+    "http://localhost:5173/",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
